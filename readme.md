@@ -117,9 +117,14 @@ http://127.0.0.1:8000/docs
 
 ---
 
-### 4. Run UI
+### 4. RUN UI
 
 Open `index.html` in your browser
+````
+##UI DEMO
+````
+<img width="1440" height="900" alt="ui_demo" src="https://github.com/user-attachments/assets/b1f6d952-af96-4553-bf12-809804a41472" />
+
 
 ---
 
