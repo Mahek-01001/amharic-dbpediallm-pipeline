@@ -10,7 +10,7 @@ def generate_rdf(data):
 
     g.bind("dbo", DBO)
 
-    
+    # 🔥 ADD THIS BLOCK (CLASS PREDICTION)
     if "entities" in data:
         for ent in data["entities"]:
             subject = URIRef(EX[normalize(ent["name"])])
