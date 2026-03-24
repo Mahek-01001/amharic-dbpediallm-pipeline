@@ -1,0 +1,6 @@
+@prefix dbo: <http://dbpedia.org/ontology/> .
+
+<http://example.org/resource/Addis_Ababa> dbo:capital <http://example.org/resource/Ethiopia> .
+
+<http://example.org/resource/Ethiopia> dbo:location <http://example.org/resource/Africa> .
+
