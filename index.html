@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LLM RDF Demo</title>
+</head>
+<body>
+  <h2>Text to RDF</h2>
+  <textarea id="input" rows="4" cols="50"></textarea><br><br>
+  <button onclick="send()">Convert</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    async function send() {
+      const text = document.getElementById("input").value;
+
+      const res = await fetch("http://127.0.0.1:8000/extract", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ text: text })
+      });
+
+      const data = await res.json();
+      document.getElementById("output").innerText = data.rdf;
+    }
+  </script>
+</body>
+</html>
