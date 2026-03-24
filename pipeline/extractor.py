@@ -23,6 +23,10 @@ def extract(text):
 
         # fallback mock
         return {
+    "entities": [
+        {"name": "Addis Ababa", "type": "City"},
+        {"name": "Ethiopia", "type": "Country"}
+    ],
     "relations": [
         {
             "subject": "Addis Ababa",
