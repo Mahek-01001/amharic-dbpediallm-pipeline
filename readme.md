@@ -1,99 +1,180 @@
-🇪🇹 Amharic DBpedia: LLM-Based RDF Extraction Pipeline
-📝 Overview
-This project demonstrates a prototype pipeline for extracting structured knowledge from unstructured Amharic text and converting it into RDF triples aligned with the DBpedia Ontology. It addresses the GSoC 2025 goal of automating knowledge graph construction for the Amharic DBpedia chapter using Large Language Models (LLMs).
+# 🇪🇹 Amharic DBpedia: LLM-Based RDF Extraction Pipeline
 
-⚠️ Problem Statement
-Wikipedia contains vast amounts of unstructured text, specifically in low-resource languages like Amharic. Converting this into Linked Open Data (LOD) is currently a manual or semi-automated process. This project focuses on using LLMs to automate extraction while maintaining high semantic accuracy via ontology verification.
+## 📝 Overview
+
+This project presents a prototype pipeline for extracting structured knowledge from unstructured text and converting it into RDF triples aligned with the DBpedia Ontology.
+
+It is designed as part of the GSoC exploration for automating knowledge graph construction in the Amharic DBpedia chapter using Large Language Models (LLMs).
 
 ---
 
-Architecture
-The pipeline is designed as a modular neuro-symbolic system:
+## ⚠️ Problem Statement
 
-Plaintext
-       Text Input (Amharic)
-               ↓
-    LLM Extraction (Real/Mock) → [Identifies S-P-O Candidates]
-               ↓
-     Entity Normalization      → [Maps to DBpedia URIs]
-               ↓
-    ONTOLOGY VALIDATION LAYER  → [Checks candidates against dbpedia.owl]
-               ↓
-     RDF Triple Generation    → [Serialization via rdflib]
-               ↓
-    FastAPI Backend (Port 8000) ↔ Streamlit UI (Port 8501)
-✨ Features
-Modular Pipeline: Decoupled extraction, mapping, and validation logic.
+Wikipedia contains vast amounts of unstructured data, especially in low-resource languages like Amharic. Converting this into Linked Open Data (LOD) remains largely manual or semi-automated.
 
-Ontology-Aware: Real-time validation against official DBpedia Object/Datatype properties.
+This project aims to automate:
 
-LLM Integration: Supports high-fidelity relation prediction with mock fallback for reliability.
+* Entity extraction
+* Relation prediction
+* Ontology-aligned RDF generation
 
-Interactive Dashboard: Streamlit UI for visualization and knowledge graph metrics.
+using LLMs while ensuring semantic correctness through ontology validation.
 
-FAIR Principles: Reproducible setup with standardized RDF output (Turtle format).
+---
 
-API Documentation: Auto-generated Swagger docs via FastAPI.
+## 🏗️ Architecture
 
-📂 Project Structure
-Plaintext
+```text
+Text Input (Amharic / English)
+        ↓
+LLM Extraction (Real / Mock)
+        ↓
+Structured JSON (Entities + Relations)
+        ↓
+Entity Normalization
+        ↓
+Ontology Mapping & Validation
+        ↓
+RDF Triple Generation (rdflib)
+        ↓
+FastAPI Backend  ↔  UI Layer
+```
+
+---
+
+## ✨ Features
+
+* **Modular Pipeline**
+  Separate components for extraction, normalization, mapping, and RDF generation
+
+* **LLM Integration**
+  Supports real LLMs with fallback mock system for reliability
+
+* **Ontology-Aware Mapping**
+  Aligns predicates with DBpedia ontology (`dbo:` namespace)
+
+* **Class + Relation Prediction**
+  Generates both `rdf:type` and relationship triples
+
+* **RDF Output (Turtle)**
+  Standardized and reusable knowledge graph format
+
+* **API Support**
+  FastAPI backend with interactive Swagger documentation
+
+* **End-to-End Demo**
+  UI + API integration for real-time testing
+
+---
+
+## 📂 Project Structure
+
+```text
 amharic-dbpediallm-pipeline/
-├── data/
-│   └── dbpedia_ontology.owl   # Official DBpedia Schema
 ├── pipeline/
-│   ├── extractor.py           # LLM logic
-│   ├── validator.py           # NEW: Ontology Check Logic
-│   ├── mapper.py              # URI Mapping
-│   └── rdf_generator.py       # Turtle serialization
-├── api.py                     # FastAPI Backend
-├── demo.py                    # Streamlit Frontend
-├── requirements.txt           # Dependency list
-└── README.md                  # Project documentation
-🚀 How to Run
+│   ├── extractor.py        # LLM / mock extraction
+│   ├── normalizer.py       # Entity normalization
+│   ├── mapper.py           # Ontology mapping
+│   └── rdf_generator.py    # RDF triple creation
+├── api.py                  # FastAPI backend
+├── main.py                 # Local pipeline testing
+├── index.html              # Simple UI demo
+├── output.ttl              # Generated RDF output
+├── README.md               # Documentation
+```
 
-1. Setup Environment
-Bash
-pip install rdflib fastapi uvicorn streamlit pandas requests
+---
 
+## 🚀 How to Run
 
-2. Download Ontology Data
-Create the data folder and pull the latest DBpedia schema:
+### 1. Install Dependencies
 
-Bash
-mkdir -p data
-curl -L -o data/dbpedia_ontology.owl https://databus.dbpedia.org/ontologies/dbpedia.org/ontology/2022.10.13-080000/ontology_type=orig.owl
+```bash
+pip install rdflib fastapi uvicorn
+```
 
+---
 
-3. Launch the System
-You need two terminal sessions:
+### 2. Run Pipeline (Local Test)
 
-Terminal 1 (Backend): uvicorn api:app --reload
+```bash
+python main.py
+```
 
-Terminal 2 (Frontend): streamlit run demo.py
+---
 
-📊 Example Output
-Input: Addis Ababa is the capital of Ethiopia
+### 3. Run Backend API
 
-Validated RDF (Turtle):
+```bash
+uvicorn api:app --reload
+```
 
-Code snippet
+Open:
+
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+### 4. Run UI
+
+Open `index.html` in your browser
+
+---
+
+## 📊 Example
+
+### Input
+
+```text
+Addis Ababa is the capital of Ethiopia
+```
+
+---
+
+### Output (Turtle RDF)
+
+```ttl
 @prefix dbo: <http://dbpedia.org/ontology/> .
-@prefix dbr: <http://dbpedia.org/resource/> .
 
-dbr:Addis_Ababa dbo:capital dbr:Ethiopia .
-dbr:Ethiopia dbo:location dbr:Africa .
+<http://example.org/resource/Addis_Ababa> rdf:type dbo:City .
+<http://example.org/resource/Ethiopia> rdf:type dbo:Country .
 
+<http://example.org/resource/Addis_Ababa> dbo:capital <http://example.org/resource/Ethiopia> .
+<http://example.org/resource/Ethiopia> dbo:location <http://example.org/resource/Africa> .
+```
 
-🛠️ Future Enhancements
+---
 
-Integrate fine-tuned Amharic NLP models (e.g., AfroLM).
+## 🔐 LLM Integration
 
-Implement a SPARQL endpoint for direct querying.
+The system supports:
 
-Add Human-in-the-Loop (HITL) verification features in the UI.
+* Real LLM-based extraction (OpenAI / HuggingFace)
+* Fallback mock extraction for offline reliability
 
-Deploy the knowledge graph using Virtuoso.
+---
 
-🤝 Contribution & Author
-This is a prototype built for the DBpedia GSoC 2025 exploration phase.
-Author: Mahek Maurya (Mahek-01001)
+## 🛠️ Future Enhancements
+
+* Amharic-specific NLP model integration
+* Ontology validation using official DBpedia schema
+* SPARQL endpoint for querying
+* Full web deployment
+* Human-in-the-loop validation system
+
+---
+
+## 🤝 Contribution
+
+This project is part of the exploration phase for the DBpedia GSoC program.
+
+Contributions, feedback, and suggestions are welcome.
+
+---
+
+## 👤 Author
+
+**Mahek Maurya**
+
