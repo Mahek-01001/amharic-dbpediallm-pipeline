@@ -58,6 +58,7 @@ API (FastAPI) → UI (HTML)
 *  Simple UI for demonstration
 *  Confidence-based filtering
 *  Multi-relation support
+*  Class (rdf:type) prediction using entity extraction
 
 ---
 
