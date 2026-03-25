@@ -1,7 +1,7 @@
 # 🇪🇹 Amharic DBpedia: LLM-Based RDF Extraction Pipeline
 
 ## 📝 Overview
-
+>  Built as part of exploration for DBpedia GSoC (Amharic LLM Pipeline project)
 This project presents a prototype pipeline for extracting structured knowledge from unstructured text and converting it into RDF triples aligned with the DBpedia Ontology.
 
 It is designed as part of the GSoC exploration for automating knowledge graph construction in the Amharic DBpedia chapter using Large Language Models (LLMs).
